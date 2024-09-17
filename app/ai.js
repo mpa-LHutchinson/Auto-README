@@ -3,6 +3,7 @@
 
 require('dotenv').config({ path: '../.env' });
 const Groq = require("groq-sdk");
+const model = "llama3-8b-8192"
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const exampleFileContent = "This file is currently under development. It will be able to multiply 2 numbers together!"
@@ -20,8 +21,8 @@ async function getGroqChatCompletion(fileContent) {
         content: "My file has this content in it: " + fileContent + " Write a README file for this file.",
       },
     ],
-    model: "llama3-8b-8192",
+    model: model,
   });
 }
 
-module.exports = { createREADME };
+module.exports = { createREADME, model };
