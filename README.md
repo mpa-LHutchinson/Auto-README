@@ -8,15 +8,21 @@ This Node.js script is designed to generate a README file for a project using a 
 
 Before using, make sure to provide an API key as an environment variable. You can either do this by creating a .env file and adding this line:
 
-* GROQ_API_KEY=<YourAPIkey>
+```bash
+GROQ_API_KEY=<YourAPIkey>
+```
 
 or by setting it in the terminal:
 
-* $env:GROQ_API_KEY="<YourAPIkey>"
+```bash
+$env:GROQ_API_KEY="<YourAPIkey>"
+```
 
 Once you do this, run this command:
 
-* node index.js
+```bash
+node index.js
+```
 
 **Command-line arguments**
 
