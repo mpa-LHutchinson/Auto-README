@@ -18,7 +18,7 @@ async function getGroqChatCompletion(fileContents, fileNames) {
     messages: [
       {
         role: "user",
-        content: "My file has this content in it: " + fileContents + "The name of the file is " + fileNames + " Write a README file for this file, and make sure to mention each file provided.",
+        content: "My files have this content in it: " + fileContents + "The name of the files are " + fileNames + " Generate a README file for a project that uses this code.",
       },
     ],
     model: model,
