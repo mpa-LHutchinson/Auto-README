@@ -1,7 +1,7 @@
 //This code was provided by the gorqcloud documentation. It was edited to fit this program.
 // Visit https://console.groq.com/docs/quickstart
 
-require('dotenv').config({ path: '../.env' });
+require('dotenv').config({ path: './.env' });
 const Groq = require("groq-sdk");
 const model = "llama3-8b-8192"
 
