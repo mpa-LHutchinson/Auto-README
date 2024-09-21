@@ -1,10 +1,7 @@
 # Auto-README
 
-[watch video](
 
 https://github.com/user-attachments/assets/4ef61766-5780-434f-8440-2d02389c977c
-
-)
 
 This README file was partially generated using GROQ API. 
 
