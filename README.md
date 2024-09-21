@@ -1,5 +1,11 @@
 # Auto-README
 
+[watch video](
+
+https://github.com/user-attachments/assets/4ef61766-5780-434f-8440-2d02389c977c
+
+)
+
 This README file was partially generated using GROQ API. 
 
 This Node.js script is designed to generate a README file for a project using a model from Groq, a chat AI platform. Here's a breakdown of the script:
