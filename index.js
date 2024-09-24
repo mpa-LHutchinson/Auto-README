@@ -86,13 +86,20 @@ if (fileNames.length > 0) {
     if (process.argv.includes('--token-usage') || process.argv.includes('--t')) {
       const tokenUsage = await getTokenUsage(fileContents, readmeContent);  // Get token usage data
       console.error(`Token usage: ${tokenUsage.prompt} tokens in the prompt, ${tokenUsage.completion} tokens in the completion.`);
+      process.exit(0);
     }
   })
   .catch((error) => {
     console.error("Error generating README:", error);
+    process.exit(1);
   });
+}
+
+else{
+  process.exit(0);
 }
 
 if (process.argv.length == 2){
     console.log("Hi! Welcome to Auto-ReadMe. For help, run this command: node index.js --h. Enjoy!");
+    process.exit(0);
 }
