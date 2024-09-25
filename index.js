@@ -1,8 +1,9 @@
 const fs = require('fs');
 const path = require('path');
-const { createREADME, model, getTokenUsage } = require('./ai');  // Ensure getTokenUsage function is available
+const { createREADME, models, getTokenUsage } = require('./ai');  // Ensure getTokenUsage function is available
 const version = 0.1;
 var readmeFileName = 'generatedFile.md';
+let modelChange = 0;
 
 // generating the file path for the AI-generated readme file
 var generatedFilePath = path.join(__dirname, readmeFileName);
@@ -14,8 +15,9 @@ Usage: node index.js [options] [file]
 
 Options:
 --version, --v     Show the current version of the program.
+--mc <modelNumber> Specify which model you would like to use. Use 0-${models.length-1} for specific model, and use -1 to use all models.
 --model, --m       Display the model being used for the README generation.
-<filename> --o     Specify the output file name for the generated README.
+--o <filename>     Specify the output file name for the generated README.
 --token-usage, --t  Show the token usage for the prompt and completion.
 --help, --h        Show help information.
 
@@ -33,8 +35,41 @@ if (process.argv.includes('--version') || process.argv.includes('--v')) {
     console.log("version: " + version);
 }
 
+if (process.argv.includes('--mc') || process.argv.includes('--mc')) {
+  const outputIndex = process.argv.indexOf('--mc') + 1;
+
+  if (outputIndex < process.argv.length) {
+      modelChange = parseInt(process.argv[outputIndex], 10);
+
+      if (!Number.isInteger(modelChange)){
+        console.error("Error: Did not specify model number. Make sure to specify an integer number after --mc");
+        process.exit(1);
+      }
+      else if (modelChange >= models.length){
+        console.error("Error: Model specified is not available");
+        process.exit(1);
+      }
+      else if (modelChange != -1){
+        console.log("Model set to: " + models[modelChange]);
+      }
+      else{
+        console.log("Model set to all.");
+      }
+
+  } else {
+      console.error("Error: No model specified after --mc");
+      process.exit(1);
+  }
+}
+
 if (process.argv.includes('--model') || process.argv.includes('--m')) {
-  console.log("model: " + model);
+  if (modelChange === -1){
+    console.log("model: All models");
+  }
+  else{
+    console.log("model: " + models[modelChange]);
+  }
+  
 }
 
 
@@ -58,7 +93,7 @@ if (process.argv.includes('--o')) {
 let fileNames = [];
 let fileContents = [];
 for (let i = 2; i < process.argv.length; i++) {
-    if (!process.argv[i].startsWith('--') && process.argv[i-1] !== '--o') {
+    if (!process.argv[i].startsWith('--') && process.argv[i-1] !== '--o' && process.argv[i-1] !== '--mc') {
         fileNames.push(process.argv[i]);
     }
 }
@@ -77,22 +112,44 @@ if (fileNames.length > 0) {
     }
   }
 
-  // calling createREADME from ai.js to generate a README file
-  createREADME(fileContents, fileNames)
-  .then(async (readmeContent) => {
-    console.log("Successfully generated README, check " + readmeFileName + " in this directory for your new README file.");
-    fs.writeFileSync(generatedFilePath, readmeContent, 'utf8');
+  if (modelChange === -1){
+    for (let i=0; i<models.length; i++){
+      
+      // calling createREADME from ai.js to generate a README file
+      createREADME(fileContents, fileNames, i)
+      .then(async (readmeContent) => {
+        console.log("Successfully generated README with model " + models[i] +  ". Check model" + i + ".md in this directory for your new README file.");
+        fs.writeFileSync(path.join(__dirname, `Model${i}.md`), readmeContent, 'utf8');
 
-    if (process.argv.includes('--token-usage') || process.argv.includes('--t')) {
-      const tokenUsage = await getTokenUsage(fileContents, readmeContent);  // Get token usage data
-      console.error(`Token usage: ${tokenUsage.prompt} tokens in the prompt, ${tokenUsage.completion} tokens in the completion.`);
-      process.exit(0);
+        if (process.argv.includes('--token-usage') || process.argv.includes('--t')) {
+          const tokenUsage = await getTokenUsage(fileContents, readmeContent, i);  // Get token usage data
+          console.error(`Token usage for ${models[i]}: ${tokenUsage.prompt} tokens in the prompt, ${tokenUsage.completion} tokens in the completion.`);
+        }
+      })
+      .catch((error) => {
+        console.error("Error generating README:", error);
+      });
+
     }
-  })
-  .catch((error) => {
-    console.error("Error generating README:", error);
-    process.exit(1);
-  });
+  }
+  else{
+    // calling createREADME from ai.js to generate a README file
+    createREADME(fileContents, fileNames, modelChange)
+    .then(async (readmeContent) => {
+      console.log("Successfully generated README with model " + models[modelChange] +"check " + readmeFileName + " in this directory for your new README file.");
+      fs.writeFileSync(generatedFilePath, readmeContent, 'utf8');
+
+      if (process.argv.includes('--token-usage') || process.argv.includes('--t')) {
+        const tokenUsage = await getTokenUsage(fileContents, readmeContent, modelChange);  // Get token usage data
+        console.error(`Token usage: ${tokenUsage.prompt} tokens in the prompt, ${tokenUsage.completion} tokens in the completion.`);
+      }
+    })
+    .catch((error) => {
+      console.error("Error generating README:", error);
+    });
+  }
+
+  
 }
 
 else{
