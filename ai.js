@@ -1,8 +1,26 @@
 require('dotenv').config({ path: './.env' });
 const Groq = require("groq-sdk");
+const fs = require('fs');
+const toml = require('toml');
 const models = ["llama3-8b-8192", "mixtral-8x7b-32768", "llava-v1.5-7b-4096-preview"];
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+let configFile, config;
+if (fs.existsSync('./auto-README-config.toml')){//check of toml config file exist
+  try{
+    configFile = fs.readFileSync('./auto-README-config.toml', 'utf-8');
+    config = toml.parse(configFile);
+  }catch(err){
+    console.error("Error in the toml file: ", err); //output an error if tiers error in the toml config file
+  }
+}
+var api;
+if(config.api){ //if toml config file has an api key, use the api in the toml file
+  api = config.api;
+}else{
+  api = process.env.GROQ_API_KEY; // if not use the one in the env file
+}
+
+const groq = new Groq({ apiKey: api });
 
 async function createREADME(fileContents, fileNames, modelChange) {
   const chatCompletion = await getGroqChatCompletion(fileContents, fileNames, modelChange);
