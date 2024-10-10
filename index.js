@@ -3,12 +3,18 @@ const path = require('path');
 const { createREADME, models, getTokenUsage } = require('./ai');  // Ensure getTokenUsage function is available
 const version = 0.1;
 var readmeFileName = 'generatedFile.md';
-let modelChange = 0;
+let modelNumber = 0;
 
 // generating the file path for the AI-generated readme file
 var generatedFilePath = path.join(__dirname, readmeFileName);
 
 // check for command line arguments
+
+if (process.argv.length == 2){
+  console.log("Hi! Welcome to Auto-ReadMe. For help, run this command: node index.js --h. Enjoy!");
+  process.exit(0);
+}
+
 if (process.argv.includes('--help') || process.argv.includes('--h')) {
   console.log(`
 Usage: node index.js [options] [file]
@@ -39,18 +45,18 @@ if (process.argv.includes('--mc') || process.argv.includes('--mc')) {
   const outputIndex = process.argv.indexOf('--mc') + 1;
 
   if (outputIndex < process.argv.length) {
-      modelChange = parseInt(process.argv[outputIndex], 10);
+      modelNumber = parseInt(process.argv[outputIndex], 10);
 
-      if (!Number.isInteger(modelChange)){
+      if (!Number.isInteger(modelNumber)){
         console.error("Error: Did not specify model number. Make sure to specify an integer number after --mc");
         process.exit(1);
       }
-      else if (modelChange >= models.length){
+      else if (modelNumber >= models.length){
         console.error("Error: Model specified is not available");
         process.exit(1);
       }
-      else if (modelChange != -1){
-        console.log("Model set to: " + models[modelChange]);
+      else if (modelNumber != -1){
+        console.log("Model set to: " + models[modelNumber]);
       }
       else{
         console.log("Model set to all.");
@@ -63,11 +69,11 @@ if (process.argv.includes('--mc') || process.argv.includes('--mc')) {
 }
 
 if (process.argv.includes('--model') || process.argv.includes('--m')) {
-  if (modelChange === -1){
+  if (modelNumber === -1){
     console.log("model: All models");
   }
   else{
-    console.log("model: " + models[modelChange]);
+    console.log("model: " + models[modelNumber]);
   }
   
 }
@@ -112,7 +118,7 @@ if (fileNames.length > 0) {
     }
   }
 
-  if (modelChange === -1){
+  if (modelNumber === -1){
     for (let i=0; i<models.length; i++){
       
       // calling createREADME from ai.js to generate a README file
@@ -134,13 +140,13 @@ if (fileNames.length > 0) {
   }
   else{
     // calling createREADME from ai.js to generate a README file
-    createREADME(fileContents, fileNames, modelChange)
+    createREADME(fileContents, fileNames, modelNumber)
     .then(async (readmeContent) => {
-      console.log("Successfully generated README with model " + models[modelChange] +"check " + readmeFileName + " in this directory for your new README file.");
+      console.log("Successfully generated README with model " + models[modelNumber] +"check " + readmeFileName + " in this directory for your new README file.");
       fs.writeFileSync(generatedFilePath, readmeContent, 'utf8');
 
       if (process.argv.includes('--token-usage') || process.argv.includes('--t')) {
-        const tokenUsage = await getTokenUsage(fileContents, readmeContent, modelChange);  // Get token usage data
+        const tokenUsage = await getTokenUsage(fileContents, readmeContent, modelNumber);  // Get token usage data
         console.error(`Token usage: ${tokenUsage.prompt} tokens in the prompt, ${tokenUsage.completion} tokens in the completion.`);
       }
     })
@@ -154,9 +160,4 @@ if (fileNames.length > 0) {
 
 else{
   process.exit(0);
-}
-
-if (process.argv.length == 2){
-    console.log("Hi! Welcome to Auto-ReadMe. For help, run this command: node index.js --h. Enjoy!");
-    process.exit(0);
 }

@@ -13,22 +13,19 @@ if (fs.existsSync('./auto-README-config.toml')){//check of toml config file exis
     console.error("Error in the toml file: ", err); //output an error if tiers error in the toml config file
   }
 }
-var api;
-if(config.api){ //if toml config file has an api key, use the api in the toml file
-  api = config.api;
-}else{
-  api = process.env.GROQ_API_KEY; // if not use the one in the env file
-}
+
+var api = config?.api || process.env.GROQ_API_KEY; //if toml config file has an api key, use the api in the toml file, if not use the one in the env file
+
 
 const groq = new Groq({ apiKey: api });
 
-async function createREADME(fileContents, fileNames, modelChange) {
-  const chatCompletion = await getGroqChatCompletion(fileContents, fileNames, modelChange);
+async function createREADME(fileContents, fileNames, modelNumber) {
+  const chatCompletion = await getGroqChatCompletion(fileContents, fileNames, modelNumber);
   return (chatCompletion.choices[0]?.message?.content || "");
 }
 
 // Function to get Groq Chat Completion and token usage
-async function getGroqChatCompletion(fileContents, fileNames, modelChange) {
+async function getGroqChatCompletion(fileContents, fileNames, modelNumber) {
   const response = await groq.chat.completions.create({
     messages: [
       {
@@ -36,15 +33,15 @@ async function getGroqChatCompletion(fileContents, fileNames, modelChange) {
         content: "My files have this content in it: " + fileContents + "The name of the files are " + fileNames + " Generate a README file for a project that uses this code.",
       },
     ],
-    model: models[modelChange],
+    model: models[modelNumber],
   });
 
   return response;
 }
 
 // Function to retrieve token usage from the Groq API
-async function getTokenUsage(fileContents, fileNames, modelChange) {
-  const response = await getGroqChatCompletion(fileContents, fileNames, modelChange);
+async function getTokenUsage(fileContents, fileNames, modelNumber) {
+  const response = await getGroqChatCompletion(fileContents, fileNames, modelNumber);
 
   return {
     prompt: response.usage?.prompt_tokens || 0,        // Check for prompt tokens in the API response
