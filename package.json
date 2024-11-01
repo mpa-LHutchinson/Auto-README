@@ -2,6 +2,20 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "groq-sdk": "^0.7.0",
-    "node": "^22.8.0"
+    "node": "^22.8.0",
+    "toml": "^3.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.14.0",
+    "eslint": "^9.14.0",
+    "globals": "^15.11.0",
+    "prettier": "^3.3.3"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "format-check": "prettier --check .",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix"
   }
+
 }
