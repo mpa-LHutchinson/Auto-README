@@ -9,7 +9,7 @@ This Node.js script is designed to generate a README file for a project using a 
 
 **Getting started**
 
-Before using, make sure to provide an API key as an environment variable. You can either do this by creating a .env file and adding this line:
+To use this project, clone the repository onto your local machine. Before using, make sure to provide an API key as an environment variable. You can either do this by creating a .env file and adding this line:
 
 ```bash
 GROQ_API_KEY=<YourAPIkey>
@@ -26,6 +26,8 @@ Once you do this, run this command:
 ```bash
 node index.js
 ```
+
+To contribute to the development of this project, follow the guidelines listed in [CONTRIBUTING.MD](CONTRIBUTING.MD).
 
 **Command-line arguments**
 

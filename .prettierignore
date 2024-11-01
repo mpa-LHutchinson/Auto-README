@@ -1,0 +1,13 @@
+node_modules
+.vscode
+.env
+.gitignore
+.prettierrrc
+eslint.config.mjs
+examples
+auto-README-config.toml
+CONTRIBUTING.md
+LICENSE
+package-lock.json
+package.json
+README.md
