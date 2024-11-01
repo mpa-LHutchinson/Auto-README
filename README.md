@@ -27,7 +27,7 @@ Once you do this, run this command:
 node index.js
 ```
 
-To contribute to the development of this project, follow the guidelines listed in [CONTRIBUTING.MD](CONTRIBUTING.MD).
+To contribute to the development of this project, follow the guidelines listed in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 **Command-line arguments**
 
