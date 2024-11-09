@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const { createREADME, models, getTokenUsage } = require('./ai'); // Ensure getTokenUsage function is available
-const version = 0.1;
+const { createREADME, getTokenUsage } = require('./ai'); // Ensure getTokenUsage function is available
+const { version, models } = require('./config');
 var readmeFileName = 'generatedFile.md';
 let modelNumber = 0;
 

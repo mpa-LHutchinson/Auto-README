@@ -2,11 +2,7 @@ require('dotenv').config({ path: './.env' });
 const Groq = require('groq-sdk');
 const fs = require('fs');
 const toml = require('toml');
-const models = [
-  'llama3-8b-8192',
-  'mixtral-8x7b-32768',
-  'llava-v1.5-7b-4096-preview',
-];
+const {models} = require('./config');
 
 let configFile, config;
 if (fs.existsSync('./auto-README-config.toml')) {
@@ -49,6 +45,7 @@ async function getGroqChatCompletion(fileContents, fileNames, modelNumber) {
     model: models[modelNumber],
   });
 
+  //console.log(response.choices[0].message);
   return response;
 }
 
