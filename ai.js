@@ -2,20 +2,31 @@ require('dotenv').config({ path: './.env' });
 const Groq = require('groq-sdk');
 const fs = require('fs');
 const toml = require('toml');
-const {models} = require('./config');
+const { models } = require('./config');
 
-let configFile, config;
-if (fs.existsSync('./auto-README-config.toml')) {
-  //check of toml config file exist
-  try {
-    configFile = fs.readFileSync('./auto-README-config.toml', 'utf-8');
-    config = toml.parse(configFile);
-  } catch (err) {
-    console.error('Error in the toml file: ', err); //output an error if tiers error in the toml config file
+// Function to load the configuration file
+function loadConfig(fileName) {
+  let configFile, config;
+  let file = fileName || './auto-README-config.toml';
+  if (fs.existsSync(file)) {
+    //check if the toml config file exist
+    try {
+      configFile = fs.readFileSync(file, 'utf-8');
+      config = toml.parse(configFile);
+    } catch (err) {
+      console.error('Error in the toml file: ', err); //output an error if tiers error in the toml config file
+    }
   }
+  return config || {};
 }
 
-var api = config?.api || process.env.GROQ_API_KEY; //if toml config file has an api key, use the api in the toml file, if not use the one in the env file
+// Function to setup the API key
+function getApiKey() {
+  const config = loadConfig();
+  return config.api || process.env.GROQ_API_KEY; //if toml config file has an api key, use the api in the toml file, if not use the one in the env file
+}
+
+const api = getApiKey();
 
 const groq = new Groq({ apiKey: api });
 
@@ -63,4 +74,4 @@ async function getTokenUsage(fileContents, fileNames, modelNumber) {
   };
 }
 
-module.exports = { createREADME, getTokenUsage, models };
+module.exports = { createREADME, getTokenUsage, loadConfig, models };
