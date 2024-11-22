@@ -21,7 +21,7 @@
     "test": "jest"
   },
   "name": "auto-readme-liam",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "bin": {
     "auto-readme-liam": "./index.js"
   }
