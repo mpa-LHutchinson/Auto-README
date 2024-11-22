@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const fs = require('fs');
 const path = require('path');
 const { createREADME, getTokenUsage } = require('./ai'); // Ensure getTokenUsage function is available
