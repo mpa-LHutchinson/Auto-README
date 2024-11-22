@@ -19,5 +19,6 @@
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "test": "jest"
-  }
+  },
+  "version": "0.0.1"
 }
