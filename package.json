@@ -20,5 +20,9 @@
     "lint-fix": "eslint . --fix",
     "test": "jest"
   },
-  "version": "0.1.0"
+  "name": "auto-readme-liam",
+  "version": "0.1.0",
+  "bin": {
+    "auto-readme-liam": "./index.js"
+  }
 }
